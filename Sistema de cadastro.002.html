@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Carros</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(90deg ,rgb(158, 250, 166), rgb(96, 160, 101));
+            padding: 20px;
+        }
+        
+    form {
+        width: 100%;
+         }
+
+         .data{
+            font-weight: bold;
+            color: white;
+         }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            
+        }
+        input[type="text"] {
+            width: 400px;
+            padding: 8px;
+            margin: 5px 0 px;
+            box-sizing: border-box;
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #00ff08;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .btn-export {
+            background-color: #008CBA;
+        }
+        h1{
+            color: white;
+            font-weight: bold;
+        }
+        .mot{
+            color: white;
+            font-weight: bold;
+            
+        }
+        .form{
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1px;
+        }
+        .mot{
+            display: flex;
+            flex-direction: column;
+            
+        }
+        .qtd{
+            color: white;
+            font-weight: bold;
+        }
+        #QTD{
+            width: 30px;
+            margin-left: 10px;
+        }
+        @media screen and (max-width: 730px) {
+            form{
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 10px;
+            }
+            .form{
+                display:flex;
+                flex-direction: column;
+            }
+            .qtd{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 10px;
+            }
+            #QTD{
+                height: 20px;
+                width: 20px;
+            }
+            button{
+                font-weight: bold;
+            }
+            }
+        </style>
+</head>
+<body>
+    <h1>Registro de Carros</h1>
+    
+    <form id="car-form">
+        <div class="form">
+            <label for="Tecnico"></label>
+            <select name="Tecnico" id="Tecnico">
+                <option value="">Selecione um Produto</option>
+                            <option value="Pao de forma Panco premium">Pao de forma Panco premium</option>
+                            <option value="Pao bisnaguinha Panco">Pao bisnaguinha Panco</option>
+                            <option value="Pao de forma Kim">Pao de forma Kim</option>
+                            <option value="GPS TRAVADO">Pao de bisnaguinha kim</option>
+                            <option value="Pao de forma Pumman">Pao de forma Pumman</option>
+                            <option value="Pao de bisnaguinha Pumman">Pao de bisnaguinha Pumman</option>
+                            <option value="Pao de forma Seven Boy">Pao de forma Seven Boy</option>
+                            <option value="Pao de bisnaguinha Seven Boy">Pao de bisnaguinha Seven Boy</option>       
+                            <option value="Pao sovado Seven Boy">Pao sovado Seven Boy</option>
+                            <option value="Pao de forma Wikiboll">Pao de forma Wikiboll</option>  
+                            <option value="Pao de bisnaguinha Wikiboll">Pao de bisnaguinha Wikiboll</option> 
+                </select>
+
+             <label for="data" class="data">Data do produto</label>
+                <input type="date" id="data" required>
+            
+                <div class="desis">
+                    <label for="motivo" class="mot">Motivo</label>
+                        <select id="motivo" name="motivo" required>
+                            <option value="">Selecione um motivo</option>
+                            <option value="Produto Vencido">Produto Vencido</option>
+                            <option value="Produto perto de vencimento">Produto perto de vencimento</option>
+                            <option value="Produto sem Vacuo/Avarias">Produto sem Vacuo/Avarias</option> 
+                        </select>
+                </div>
+                <div class="qtd">
+                    <label for="QTD" class="qtd">Qantidade do pruduto</label>
+                    <input type="number" name="QTD" id="QTD">
+                </div>
+          
+        </div>
+       
+
+
+        
+        <button type="button" onclick="salvarDados()">Salvar Registro</button>
+        <button type="button" class="btn-export" onclick="exportarParaExcel()">Exportar para Excel</button>
+    </form>
+    
+    <script>
+        // Array para armazenar os registros
+        const registros = [];
+
+        // Função para salvar os dados do formulário
+        function salvarDados() {
+            // Obter os valores dos campos
+            const produto = document.getElementById('Tecnico').value;
+            const data = document.getElementById('data').value;
+            const motivo = document.getElementById('motivo').value;
+            const qtd = document.getElementById("QTD").value;
+
+            // Verificar se todos os campos estão preenchidos
+            if (!data || !motivo || !qtd || !produto) {
+                alert('Por favor, preencha todos os campos!');
+                return;
+            }
+
+            // Criar um objeto com os dados e adicionar ao array
+            const registro = {Produto: produto , Data:data , Motivo:motivo , QTD:qtd };
+            registros.push(registro);
+
+            // Limpar os campos do formulário
+            document.getElementById('car-form').reset();
+
+            alert('Registro salvo com sucesso!');
+        }
+
+        // Função para exportar os dados para Excel
+        function exportarParaExcel() {
+            if (registros.length === 0) {
+                alert('Nenhum dado para exportar!');
+                return;
+            }
+
+            // Criar uma planilha a partir dos dados
+            const planilha = XLSX.utils.json_to_sheet(registros);
+
+            // Criar um workbook e adicionar a planilha
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, planilha, "Registros");
+
+            // Exportar o arquivo Excel
+            XLSX.writeFile(wb, 'registros_carros.xlsx');
+        }
+    </script>
+</body>
+</html>
+
+
